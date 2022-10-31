@@ -1,0 +1,25 @@
+version: "2.2"
+services:
+  jobmanager:
+    build: .
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    volumes:
+      - .:/opt/test
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+
+  taskmanager:
+    build: .
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
